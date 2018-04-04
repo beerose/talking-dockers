@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# docker network create --driver=bridge --subnet=172.28.5.0/16 net
+# docker network create --subnet=172.27.5.0/16 net
 
 setup_sender() {
     echo "docker rm --force c_sender; docker run -e MODE=sender -it --name c_sender --network net --ip 172.27.5.10 datagram-sockets-sample"

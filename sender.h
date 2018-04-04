@@ -1,7 +1,5 @@
 #include "utils.h"
 
-#define SERVERPORT "54321"
-
 typedef struct {
   int sockfd;
   sockaddr *addr;

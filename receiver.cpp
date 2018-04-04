@@ -46,15 +46,28 @@ int receivePackets() {
 
   int sockfd = initSocket();
 
-  struct sockaddr_storage their_addr;
-  socklen_t addr_len = sizeof their_addr;
-  if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN - 1, 0,
-                           (struct sockaddr *)&their_addr, &addr_len)) == -1) {
-    perror("recvfrom");
-    return -1;
-  }
+  fd_set descriptors;
+  FD_ZERO(&descriptors);
+  FD_SET(sockfd, &descriptors);
+  struct timeval tv = {5, 0};
+  int ready = select(sockfd + 1, &descriptors, NULL, NULL, &tv);
 
-  std::cout << "packet contains: " << buf << "\n";
+  if (ready < 0) {
+    std::cerr << "Read from socket error.";
+  } else if (ready == 0) {
+    std::cout << "End of time.";
+  } else {
+    struct sockaddr_storage their_addr;
+    socklen_t addr_len = sizeof their_addr;
+    if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN - 1, MSG_DONTWAIT,
+                             (struct sockaddr *)&their_addr, &addr_len)) ==
+        -1) {
+      perror("recvfrom");
+      return -1;
+    }
+
+    std::cout << "packet contains: " << buf << "\n";
+  }
 
   close(sockfd);
 

@@ -52,9 +52,9 @@ int sendPackets() {
 
   SendInfo info = getSendInfo(RECEIVER_IP_ADDR);
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 1; ++i) {
+    sleep(1); // wait for receiver
     sendPacket(info);
-    sleep(1);
   }
 
   close(info.sockfd);
